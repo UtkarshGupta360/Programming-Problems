@@ -99,3 +99,36 @@ int Solution::isMatch(const string A, const string B)
     }
     return (int)dp[n - 1][m - 1];
 }
+
+
+//Space Complexity = O(N) and Time Complexity = O(M*N)
+
+int isMatch(const string A, const string B) 
+{
+    if(A.length() == 0 && B.length() == 0) return 1;
+    if(A.length() != 0 && B.length() == 0) return 0;
+    
+    int n = A.length() + 1;
+    int m = B.length() + 1;
+    
+    vector<bool>prev(n,0);
+    vector<bool>cur(n,0);
+	
+    prev[0] = 1;
+    for(int i = 1; i < n; i++) prev[i] = 0;
+    
+    for(int j = 1; j < m; j++)
+    {
+		if(B[j - 1] == '*') cur[0] = prev[0];
+        else cur[0] = 0;
+		
+        for(int i = 1; i < n; i++)
+        {
+            if(A[i - 1] == B[j - 1] || B[j - 1] == '?') cur[i] = prev[i - 1];
+            else if(B[j - 1] == '*') cur[i] = (cur[i - 1] || prev[i]);
+            else cur[i] = 0;
+        }
+		prev = cur;
+    }
+    return (int)cur[n - 1];
+}
